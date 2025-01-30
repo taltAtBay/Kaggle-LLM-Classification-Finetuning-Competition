@@ -19,9 +19,24 @@ class PEFTConfig:
 @dataclass
 class ModelConfig:
     """Configuration for model architecture"""
-    num_labels: int = 3
-    hidden_size: int = 768
-    dropout_rate: float = 0.1
+    model_name: str = "deepseek-ai/DeepSeek-R1-Distill-Llama-8B"
+    max_length: int = 8192  # Increased to utilize more of the context window
+    batch_size: int = 2     # Reduced due to longer sequences
+    learning_rate: float = 1e-5
+    num_epochs: int = 3
+    warmup_steps: int = 500
+    weight_decay: float = 0.01
+    output_dir: str = "outputs"
+    
+    # Training specific
+    gradient_accumulation_steps: int = 4  # Increased for memory efficiency
+    logging_steps: int = 100
+    save_steps: int = 1000
+    eval_steps: int = 500
+    
+    # Model specific
+    torch_dtype: str = "bfloat16"
+    use_flash_attention: bool = True
 
 @dataclass
 class TrainingConfig:

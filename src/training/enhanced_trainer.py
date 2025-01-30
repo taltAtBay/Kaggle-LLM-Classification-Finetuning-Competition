@@ -4,6 +4,7 @@ from transformers import Trainer
 from typing import Dict
 import logging
 from src.config.model_config import DoRAConfig
+from src.utils.model_utils import visualize_eval_results
 
 logger = logging.getLogger(__name__)
 
@@ -45,4 +46,15 @@ class EnhancedTrainer(Trainer):
                     total_norm += p.grad.data.norm(2).item() ** 2
             logs['gradient_norm'] = total_norm ** 0.5
         
-        super().log(logs) 
+        super().log(logs)
+
+    def evaluate(self, eval_dataset, output_dir: str = None) -> Dict[str, float]:
+        """
+        Evaluate the model and visualize results.
+        """
+        eval_results = super().evaluate(eval_dataset)
+        
+        if output_dir:
+            visualize_eval_results(eval_results, output_dir)
+        
+        return eval_results 
